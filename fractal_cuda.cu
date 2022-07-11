@@ -39,9 +39,8 @@ static __global__ void FractalKernel(const int frames, const int width, unsigned
     const int row = (idx / width) % width;
     const int frame = idx / (width * width);
 
-    //const double delta = ...
     const double delta = Delta * pow(0.98, frame);
-    //todo: compute a single pixel here
+
     const double xMin = xMid - delta;
     const double yMin = yMid - delta;
     const double dw = 2.0 * delta / width;
@@ -101,7 +100,6 @@ int main(int argc, char *argv[])
   gettimeofday(&start, NULL);
 
   // compute frames
-  //todo: launch FractalKernel here
   FractalKernel<<<((frames * (width * width)) + ThreadsPerBlock-1) / ThreadsPerBlock, ThreadsPerBlock>>>(frames, width, pic_d);
   CheckCuda();
   if (cudaSuccess != cudaMemcpy(pic, pic_d, frames * width * width * sizeof(unsigned char), cudaMemcpyDeviceToHost)) {fprintf(stderr, "copying from device failed\n"); exit(-1);}
