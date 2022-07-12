@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
   timeval start, end;
   gettimeofday(&start, NULL);
 
-  // compute frames
+  // compute frames (round up tp just enough blocks to create enough total threads)
   FractalKernel<<<((frames * (width * width)) + ThreadsPerBlock-1) / ThreadsPerBlock, ThreadsPerBlock>>>(frames, width, pic_d);
   CheckCuda();
   if (cudaSuccess != cudaMemcpy(pic, pic_d, frames * width * width * sizeof(unsigned char), cudaMemcpyDeviceToHost)) {fprintf(stderr, "copying from device failed\n"); exit(-1);}
